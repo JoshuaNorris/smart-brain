@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import Rank from './components/Rank/Rank';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Signin from './components/Signin/Signin';
+import Register from './components/Register/Register';
 import './App.css';
 import ParticlesBg from 'particles-bg'
 
@@ -16,6 +17,7 @@ function App() {
   const [box, setBox] = useState({});
   const [route, setRoute] = useState('signin');
   // route keeps track of where we are on the page
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
   const calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
@@ -42,6 +44,12 @@ function App() {
     setBox({});
     setImageURL(input);
     getAPI(input);
+  }
+
+  const onRouteChange = (route) => {
+    if (route === 'signin') { setIsSignedIn(false) }
+    else if (route === 'home') {setIsSignedIn(true)} 
+    setRoute(route);
   }
 
 
@@ -88,10 +96,9 @@ function App() {
   return (
     <div className="App">
       <ParticlesBg color="#ffffff" type="cobweb" bg={true} />
-      <Navigation />
-      { route == 'signin'
-        ? <Signin />
-        : <div> 
+      <Navigation onRouteChange={onRouteChange} isSignedIn={isSignedIn}/>
+      { route === 'home'
+        ? <div> 
             <Logo />
             <Rank />
             <p>{box.topRow}</p>
@@ -99,6 +106,9 @@ function App() {
                           onButtonSubmit={onButtonSubmit}/>
             <FaceRecognition imageURL={imageURL} box={box}/>
           </div>
+        : route === 'signin'
+          ? <Signin onRouteChange={onRouteChange}/> 
+          : <Register onRouteChange={onRouteChange}/>
       }
     </div>
   );
