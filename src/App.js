@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import Rank from './components/Rank/Rank';
@@ -18,6 +18,23 @@ function App() {
   const [route, setRoute] = useState('signin');
   // route keeps track of where we are on the page
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [user, setUser] = useState({
+    id: '',
+    name: '',
+    email: '',
+    entries: 0,
+    joined: ''
+  });
+
+  const loadUser = (user) => {
+    setUser({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      entries: user.entries,
+      joined: user.joined
+    });
+  }
 
   const calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
@@ -88,6 +105,25 @@ function App() {
     fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", requestOptions)
     .then(response => response.json())
     .then(result => { 
+      if (result) {
+        fetch('http://localhost:3000/image', {
+          method: 'put',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            id: user.id
+          })
+        })
+          .then(response => response.json())
+          .then(count => {
+            setUser({
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              entries: count,
+              joined: user.joined
+            })
+          })
+      }
       const box = calculateFaceLocation(result);
       displayFaceBox(box);
     })
@@ -95,20 +131,19 @@ function App() {
   }
   return (
     <div className="App">
-      <ParticlesBg color="#ffffff" type="cobweb" bg={true} />
+      {/* <ParticlesBg color="#ffffff" type="cobweb" bg={true} /> */}
       <Navigation onRouteChange={onRouteChange} isSignedIn={isSignedIn}/>
       { route === 'home'
         ? <div> 
             <Logo />
-            <Rank />
-            <p>{box.topRow}</p>
+            <Rank name={user.name} entries={user.entries}/>
             <ImageLinkForm onInputChange={onInputChange}
                           onButtonSubmit={onButtonSubmit}/>
             <FaceRecognition imageURL={imageURL} box={box}/>
           </div>
         : route === 'signin'
-          ? <Signin onRouteChange={onRouteChange}/> 
-          : <Register onRouteChange={onRouteChange}/>
+          ? <Signin onRouteChange={onRouteChange} loadUser={loadUser}/> 
+          : <Register onRouteChange={onRouteChange} loadUser={loadUser}/>
       }
     </div>
   );
