@@ -26,6 +26,22 @@ function App() {
     joined: ''
   });
 
+  const setInitialState = () => {
+    setInput('');
+    setImageURL('');
+    setBox('');
+    setRoute('signin');
+    setIsSignedIn(false);
+    setUser({
+      id: '',
+      name: '',
+      email: '',
+      entries: 0,
+      joined: ''
+    })
+
+  }
+
   const loadUser = (user) => {
     setUser({
       id: user.id,
@@ -64,7 +80,7 @@ function App() {
   }
 
   const onRouteChange = (route) => {
-    if (route === 'signin') { setIsSignedIn(false) }
+    if (route === 'signin') { setInitialState(); }
     else if (route === 'home') {setIsSignedIn(true)} 
     setRoute(route);
   }
@@ -92,7 +108,8 @@ function App() {
         }
       ]
     });
-  
+      
+
     const requestOptions = {
       method: 'POST',
       headers: {
@@ -102,6 +119,7 @@ function App() {
       body: raw
     };
   
+
     fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", requestOptions)
     .then(response => response.json())
     .then(result => { 
@@ -123,6 +141,7 @@ function App() {
               joined: user.joined
             })
           })
+          .catch(err => console.log(err));
       }
       const box = calculateFaceLocation(result);
       displayFaceBox(box);
