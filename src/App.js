@@ -124,7 +124,7 @@ function App() {
   }
   return (
     <div className="App">
-      {/* <ParticlesBg color="#ffffff" type="cobweb" bg={true} /> */}
+       <ParticlesBg color="#ffffff" type="cobweb" bg={true} /> 
       <Navigation onRouteChange={onRouteChange} isSignedIn={isSignedIn}/>
       { route === 'home'
         ? <div> 
