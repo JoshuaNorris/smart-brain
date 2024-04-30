@@ -141,32 +141,6 @@ function App() {
     </div>
   );
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// In this section, we set the user authentication, user and app ID, model details, and the URL
-// of the image we want as an input. Change these strings to run your own example.
-//////////////////////////////////////////////////////////////////////////////////////////////////
-
-        // const regions = result.outputs[0].data.regions;
-
-
-        // regions.forEach(region => {
-        //     // Accessing and rounding the bounding box values
-        //     const boundingBox = region.region_info.bounding_box;
-        //     const topRow = boundingBox.top_row.toFixed(3);
-        //     const leftCol = boundingBox.left_col.toFixed(3);
-        //     const bottomRow = boundingBox.bottom_row.toFixed(3);
-        //     const rightCol = boundingBox.right_col.toFixed(3);
-        //     console.log(topRow);
-
-        //     region.data.concepts.forEach(concept => {
-        //         // Accessing and rounding the concept value
-        //         const name = concept.name;
-        //         const value = concept.value.toFixed(4);
-
-        //         console.log(`${name}: ${value} BBox: ${topRow}, ${leftCol}, ${bottomRow}, ${rightCol}`);
-                
-        //     });
-        // });
 
     
 
