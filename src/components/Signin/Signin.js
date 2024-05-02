@@ -34,6 +34,24 @@ class Signin extends React.Component {
           })
       }
 
+    onGuestSignin = () => {
+        fetch('https://dumb-brain-ff26d6635c24.herokuapp.com/signin', {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            email: "guest@gmail.com",
+            password: "guest"
+          })
+        })
+          .then(response => response.json())
+          .then(user => {
+            if (user.id) {
+                this.props.loadUser(user);
+                this.props.onRouteChange('home');
+            }
+          })
+    }
+
     render() {
         const { onRouteChange } = this.props;
         return (
@@ -62,6 +80,13 @@ class Signin extends React.Component {
                             type="submit"
                             value="Sign in"
                         />
+                        </div>
+                        <div className="lh-copy mt3">
+                            <p
+                                onClick={this.onGuestSignin}
+                                className="f6 link dim black db pointer">
+                                Signin as Guest
+                            </p>
                         </div>
                         <div className="lh-copy mt3">
                             <p
